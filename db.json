@@ -1,0 +1,42 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "title": "Cây lau nhà thông minh",
+      "description": "Cây lau nhà với thiết kế tiện lợi , gọn gàng.",
+      "price": "10000000",
+      "priceSale": 120000,
+      "quantity": 10,
+      "images": "https://picsum.photos/seed/picsum/200/300",
+      "descriptionList": [
+        "Chất liệu: Nhựa ABS",
+        "Màu sắc: Trắng, Đen",
+        "Kích thước: 120 x 30 x 10 cm",
+        "Trọng lượng: 1.5 kg",
+        "Tính năng: Lau nhà tự động, có thể điều chỉnh độ cao",
+        "nhẹ nhàng"
+      ],
+      "imageList": [
+        "https://res.cloudinary.com/dwcxp0s5e/image/upload/v1746601632/kl55tkmptetkn1gv1pob.jpg",
+        "https://res.cloudinary.com/dwcxp0s5e/image/upload/v1746601639/e5hycrrsom6s6gojf4zq.jpg"
+      ]
+    }
+  ],
+  "formSubmissions": [
+    {
+      "id": 1,
+      "fullName": "Nguyễn Văn A",
+      "phoneNumber": "0123456789",
+      "address": "123 Đường ABC, Quận 1, TP.HCM",
+      "status": 1
+    },
+    {
+      "id": 2,
+      "fullName": "Lê Hiếu",
+      "phoneNumber": "0981335250",
+      "address": "Thôn Quảng Giang",
+      "quantity": 1,
+      "status": 5
+    }
+  ]
+}

@@ -1,0 +1,67 @@
+/* Font mặc định */
+body {
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+    background-color: #f9f5ff;
+    margin: 0;
+  }
+  
+  /* Sidebar */
+  aside {
+    background: linear-gradient(135deg, #a78bfa, #f472b6); /* tím -> hồng */
+    color: white;
+    width: 16rem;
+    padding: 1.5rem;
+    box-shadow: 3px 0 10px rgba(0, 0, 0, 0.05);
+  }
+  
+  /* Sidebar Title */
+  aside h2 {
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+    font-weight: 700;
+    color: #fff;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Nav Links */
+  aside nav a {
+    display: block;
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.5rem;
+    color: #fef2f8;
+    text-decoration: none;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    transition: all 0.25s ease-in-out;
+  }
+  
+  aside nav a:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+    transform: translateX(4px);
+    color: #fff;
+  }
+  
+  /* Main content */
+  main {
+    padding: 2rem;
+    flex-grow: 1;
+    background-color: #fdf4ff;
+    color: #333;
+    min-height: 100vh;
+  }
+  
+  /* Responsive hint (optional) */
+  @media (max-width: 768px) {
+    aside {
+      width: 100%;
+      position: fixed;
+      z-index: 100;
+      top: 0;
+      left: 0;
+    }
+  
+    main {
+      margin-top: 12rem;
+    }
+  }
+  
