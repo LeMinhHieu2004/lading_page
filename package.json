@@ -2,13 +2,16 @@
 	"name": "web501",
 	"private": true,
 	"version": "0.0.0",
+	"homepage": "https://leminhhieu2004.github.io/lading_page",
 	"type": "module",
 	"scripts": {
 		"dev": "concurrently \"vite --port 5173\" \"json-server --watch db.json -m ./node_modules/json-server-auth --port 3000\"",
 		"server": "json-server --watch db.json --port 3000",
 		"build": "vite build",
 		"lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
-		"preview": "vite preview"
+		"preview": "vite preview",
+		"predeploy": "npm run build",
+		"deploy": "gh-pages -d dist"
 	},
 	"dependencies": {
 		"@headlessui/react": "^2.0.3",
@@ -36,6 +39,7 @@
 		"eslint-plugin-react": "^7.33.2",
 		"eslint-plugin-react-hooks": "^4.6.0",
 		"eslint-plugin-react-refresh": "^0.4.5",
+		"gh-pages": "^6.3.0",
 		"postcss": "^8.4.38",
 		"tailwindcss": "^3.4.3",
 		"vite": "^5.0.8"
