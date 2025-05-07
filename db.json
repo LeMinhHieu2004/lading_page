@@ -25,17 +25,11 @@
   "formSubmissions": [
     {
       "id": 1,
-      "fullName": "Nguyễn Văn A",
-      "phoneNumber": "0123456789",
-      "address": "123 Đường ABC, Quận 1, TP.HCM",
-      "status": 1
-    },
-    {
-      "id": 2,
       "fullName": "Lê Hiếu",
       "phoneNumber": "0981335250",
       "address": "Thôn Quảng Giang",
-      "quantity": 1,
+      "quantity": 2,
+      "totalPrice": 200000,
       "status": 5
     }
   ]

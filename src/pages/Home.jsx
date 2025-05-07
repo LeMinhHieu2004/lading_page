@@ -13,6 +13,7 @@ const instance = axios.create({
 export default function ProductLandingPage() {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [fade, setFade] = useState(true);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [timeLeft, setTimeLeft] = useState({
@@ -20,20 +21,24 @@ export default function ProductLandingPage() {
     minutes: 54,
     seconds: 51,
   });
-  
+
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
     address: "",
-    quantity: 1,
+    quantity: "",
+    totalPrice: 0,
   });
   const [errors, setErrors] = useState({
     name: false,
     phone: false,
     address: false,
-    quantity: false
+    quantity: false,
   });
-  
+  useEffect(() => {
+    const timer = setTimeout(() => setFade(false), 3000); 
+    return () => clearTimeout(timer);
+  }, []);
   useEffect(() => {
     const fetchProduct = async () => {
       try {
@@ -68,89 +73,89 @@ export default function ProductLandingPage() {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    const updatedQuantity = name === "quantity" ? parseInt(value) || "" : formData.quantity;
+  
     setFormData({
       ...formData,
-      [name]: name === "quantity" ? parseInt(value) || 1 : value,
+      [name]: name === "quantity" ? updatedQuantity : value,
+      totalPrice: updatedQuantity * product.priceSale || 0, // Tính tổng giá
     });
-    
+  
     // Xóa lỗi khi người dùng bắt đầu nhập
     if (isSubmitted) {
       setErrors({
         ...errors,
-        [name]: false
+        [name]: false,
       });
     }
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsSubmitted(true); // Đánh dấu rằng form đã được submit
-    
-    // Kiểm tra thủ công từng trường và hiển thị lỗi
+    setIsSubmitted(true);
+  
+    // Kiểm tra lỗi
     let hasError = false;
-    
+  
     if (!formData.name) {
       message.error("Vui lòng nhập họ và tên!");
       hasError = true;
     }
-    
+  
     if (!formData.phone || !/^(\+84|0)[0-9]{9,10}$/.test(formData.phone)) {
       message.error("Số điện thoại không hợp lệ!");
       hasError = true;
     }
-    
+  
     if (!formData.address) {
       message.error("Vui lòng nhập địa chỉ!");
       hasError = true;
     }
-    
-    if (formData.quantity < 1) {
+  
+    if (!formData.quantity || formData.quantity < 1) {
       message.error("Số lượng phải lớn hơn hoặc bằng 1!");
       hasError = true;
     }
-    
-    // Nếu có lỗi thì không gửi dữ liệu
+  
     if (hasError) {
       return;
     }
-    
+  
+    // Tính toán totalPrice
+    const totalPrice = formData.quantity * product.priceSale;
+  
+    // Gửi dữ liệu đến API
+    const submissionData = {
+      fullName: formData.name,
+      phoneNumber: formData.phone,
+      address: formData.address,
+      quantity: formData.quantity,
+      totalPrice: totalPrice,
+      status: 1, // Trạng thái mặc định
+    };
+  
     try {
-      // Lấy danh sách form submissions hiện tại
-      const submissionsResponse = await instance.get("/formSubmissions");
-      const submissions = submissionsResponse.data;
-    
-      // Tìm id lớn nhất hiện tại và tăng thêm 1
-      const newId =
-        submissions.length > 0
-          ? Math.max(...submissions.map((submission) => submission.id)) + 1
-          : 1;
-    
-      // Gửi dữ liệu form lên DB với id mới
-      const response = await instance.post("/formSubmissions", {
-        id: newId,
-        fullName: formData.name,
-        phoneNumber: formData.phone,
-        address: formData.address,
-        quantity: formData.quantity,
-        status: 5,
+      const response = await fetch("http://localhost:3000/formSubmissions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(submissionData),
       });
-    
-      if (response.status === 201) {
-        message.success("Thông tin đã được gửi thành công!");
-        // Reset form sau khi gửi thành công
+  
+      if (response.ok) {
+        message.success("Đặt hàng thành công!");
         setFormData({
           name: "",
           phone: "",
           address: "",
-          quantity: 1,
+          quantity: "",
+          totalPrice: 0,
         });
-        setIsSubmitted(false);
       } else {
-        message.error("Đã xảy ra lỗi khi gửi thông tin.");
+        message.error("Đặt hàng thất bại!");
       }
     } catch (error) {
-      console.error("Lỗi khi gửi thông tin:", error);
-      message.error("Không thể gửi thông tin. Vui lòng thử lại sau.");
+      message.error("Có lỗi xảy ra khi gửi dữ liệu!");
     }
   };
 
@@ -172,7 +177,6 @@ export default function ProductLandingPage() {
     }
   };
 
-  // Calculate discount percentage
   const calculateDiscountPercentage = () => {
     if (!product) return 0;
     if (product.price <= product.priceSale) return 0;
@@ -234,18 +238,15 @@ export default function ProductLandingPage() {
 
         {/* Product Image */}
         <div className="bg-white rounded-lg shadow-md p-6 mb-8 relative">
-        <img
-  src={
-    product.imageList
-      ? product.imageList[currentImageIndex]
-      : product.images
-  }
-  alt={product.title}
-  className={`mx-auto max-h-96 object-contain transition-opacity duration-300 ${
-    fade ? "opacity-100" : "opacity-0"
-  }`}
-/>
-
+          <img
+            src={
+              product.imageList
+                ? product.imageList[currentImageIndex]
+                : product.images
+            }
+            alt={product.title}
+            className="mx-auto max-h-96 object-contain transition-opacity duration-300 opacity-100"
+          />
 
           {product.imageList && product.imageList.length > 1 && (
             <div className="absolute top-1/2 w-full flex justify-between px-4 transform -translate-y-1/2">
@@ -382,61 +383,86 @@ export default function ProductLandingPage() {
           </div>
 
           <form id="order-form" onSubmit={handleSubmit} className="space-y-4">
-  {/* Họ và tên */}
-  <div>
-  <label htmlFor="name" className="block font-bold mb-2">Họ và tên</label>
-  <input
-    type="text"
-    id="name"
-    name="name"
-    placeholder="Nhập họ và tên"
-    value={formData.name}
-    onChange={handleInputChange}
-    className={`w-full p-3 border rounded ${isSubmitted && !formData.name ? 'border-red-500' : ''}`}
-  />
-  {isSubmitted && !formData.name && (
-    <p className="text-red-500 text-sm mt-1">Họ và tên không được để trống.</p>
-  )}
-</div>
+            {/* Họ và tên */}
+            <div>
+              <label htmlFor="name" className="block font-bold mb-2">
+                Họ và tên
+              </label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                placeholder="Nhập họ và tên"
+                value={formData.name}
+                onChange={handleInputChange}
+                className={`w-full p-3 border rounded ${
+                  isSubmitted && !formData.name ? "border-red-500" : ""
+                }`}
+              />
+              {isSubmitted && !formData.name && (
+                <p className="text-red-500 text-sm mt-1">
+                  Họ và tên không được để trống.
+                </p>
+              )}
+            </div>
 
-  {/* Số điện thoại */}
-  <div>
-  <label htmlFor="phone" className="block font-bold mb-2">Số điện thoại</label>
-  <input
-    type="tel"
-    id="phone"
-    name="phone"
-    placeholder="Nhập số điện thoại"
-    value={formData.phone}
-    onChange={handleInputChange}
-    className={`w-full p-3 border rounded ${isSubmitted && (!/^(\+84|0)[0-9]{9,10}$/.test(formData.phone) || !formData.phone) ? 'border-red-500' : ''}`}
-  />
-  {isSubmitted && (!/^(\+84|0)[0-9]{9,10}$/.test(formData.phone) || !formData.phone) && (
-    <p className="text-red-500 text-sm mt-1">Số điện thoại không hợp lệ.</p>
-  )}
-</div>
+            {/* Số điện thoại */}
+            <div>
+              <label htmlFor="phone" className="block font-bold mb-2">
+                Số điện thoại
+              </label>
+              <input
+                type="tel"
+                id="phone"
+                name="phone"
+                placeholder="Nhập số điện thoại"
+                value={formData.phone}
+                onChange={handleInputChange}
+                className={`w-full p-3 border rounded ${
+                  isSubmitted &&
+                  (!/^(\+84|0)[0-9]{9,10}$/.test(formData.phone) ||
+                    !formData.phone)
+                    ? "border-red-500"
+                    : ""
+                }`}
+              />
+              {isSubmitted &&
+                (!/^(\+84|0)[0-9]{9,10}$/.test(formData.phone) ||
+                  !formData.phone) && (
+                  <p className="text-red-500 text-sm mt-1">
+                    Số điện thoại không hợp lệ.
+                  </p>
+                )}
+            </div>
 
+            {/* Địa chỉ */}
+            <div>
+              <label htmlFor="address" className="block font-bold mb-2">
+                Địa chỉ
+              </label>
+              <input
+                type="text"
+                id="address"
+                name="address"
+                placeholder="Nhập địa chỉ"
+                value={formData.address}
+                onChange={handleInputChange}
+                className={`w-full p-3 border rounded ${
+                  isSubmitted && !formData.address ? "border-red-500" : ""
+                }`}
+              />
+              {isSubmitted && !formData.address && (
+                <p className="text-red-500 text-sm mt-1">
+                  Địa chỉ không được để trống.
+                </p>
+              )}
+            </div>
 
-  {/* Địa chỉ */}
-  <div>
-  <label htmlFor="address" className="block font-bold mb-2">Địa chỉ</label>
-  <input
-    type="text"
-    id="address"
-    name="address"
-    placeholder="Nhập địa chỉ"
-    value={formData.address}
-    onChange={handleInputChange}
-    className={`w-full p-3 border rounded ${isSubmitted && !formData.address ? 'border-red-500' : ''}`}
-  />
-  {isSubmitted && !formData.address && (
-    <p className="text-red-500 text-sm mt-1">Địa chỉ không được để trống.</p>
-  )}
-</div>
-
-  {/* Số lượng */}
-  <div>
-  <label htmlFor="quantity" className="block font-bold mb-2">Số lượng</label>
+            {/* Số lượng */}
+            <div>
+  <label htmlFor="quantity" className="block font-bold mb-2">
+    Số lượng
+  </label>
   <input
     type="number"
     id="quantity"
@@ -445,21 +471,39 @@ export default function ProductLandingPage() {
     value={formData.quantity}
     onChange={handleInputChange}
     min="1"
-    className={`w-full p-3 border rounded ${isSubmitted && formData.quantity < 1 ? 'border-red-500' : ''}`}
+    className={`w-full p-3 border rounded ${
+      isSubmitted && formData.quantity < 1 ? "border-red-500" : ""
+    }`}
   />
   {isSubmitted && formData.quantity < 1 && (
-    <p className="text-red-500 text-sm mt-1">Số lượng phải lớn hơn hoặc bằng 1.</p>
+    <p className="text-red-500 text-sm mt-1">
+      Số lượng phải lớn hơn hoặc bằng 1.
+    </p>
   )}
 </div>
 
-  {/* Nút submit */}
-  <button
-    type="submit"
-    className="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-4 rounded-full text-xl"
-  >
-    ĐẶT HÀNG NGAY
-  </button>
-</form>
+<div>
+  <label htmlFor="totalPrice" className="block font-bold mb-2">
+    Tổng giá
+  </label>
+  <input
+    type="text"
+    id="totalPrice"
+    name="totalPrice"
+    value={formData.totalPrice.toLocaleString() + " Đ"}
+    readOnly
+    className="w-full p-3 border rounded bg-gray-100"
+  />
+</div>
+
+            {/* Nút submit */}
+            <button
+              type="submit"
+              className="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-4 rounded-full text-xl"
+            >
+              ĐẶT HÀNG NGAY
+            </button>
+          </form>
         </div>
 
         {/* Customer Reviews */}

@@ -36,6 +36,8 @@ const ListForm = () => {
             <th>Tên KH</th>
             <th>Số điện thoại</th>
             <th>Địa chỉ</th>
+            <th>Số Lượng</th>
+            <th>Tổng tiền</th>
             <th>Trạng thái đơn hàng</th>
           </tr>
         </thead>
@@ -46,6 +48,8 @@ const ListForm = () => {
               <td>{submission.fullName}</td>
               <td>{submission.phoneNumber}</td>
               <td>{submission.address}</td>
+              <td>{submission.quantity}</td>
+              <td>{submission.totalPrice}</td>
               <td>
                 <select
                   value={submission.status}
