@@ -9,11 +9,10 @@ function App() {
   return (
     <Routes>
       {/* Trang chính */}
-      <Route path="/lading_page/" element={<Home />} />
+      <Route path="/" element={<Home />} />
 
       {/* Layout Admin */}
-      <Route path="/lading_page/admin_leminhhieu/" element={<Layout />}>
-        {/* Các route con của admin */}
+      <Route path="/admin" element={<Layout />}>
         <Route path="form" element={<ListForm />} />
         <Route path="product" element={<ListProduct />} />
       </Route>

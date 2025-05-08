@@ -7,8 +7,8 @@ const Layout = () => {
       <aside className="w-64 bg-gray-800 text-white p-4">
         <h2 className="text-xl font-bold mb-4">Admin Panel</h2>
         <nav className="flex flex-col space-y-2">
-          <Link to="form" className="hover:underline">Form</Link>
-          <Link to="product" className="hover:underline">Product</Link>
+          <Link to="/admin/form" className="hover:underline">Form</Link>
+          <Link to="/admin/product" className="hover:underline">Product</Link>
         </nav>
       </aside>
 

@@ -11,7 +11,7 @@ const ListForm = () => {
   };
 
   useEffect(() => {
-    fetch('/lading_page/db.json') 
+    fetch('/db.json')
       .then((response) => response.json())
       .then((data) => setFormSubmissions(data.formSubmissions))
       .catch((error) => console.error('Error fetching data:', error));

@@ -4,7 +4,7 @@
       "id": 1,
       "title": "Cây lau nhà thông minh",
       "description": "Cây lau nhà với thiết kế tiện lợi , gọn gàng.",
-      "price": "999997",
+      "price": "10000000",
       "priceSale": 120000,
       "quantity": 10,
       "images": "https://picsum.photos/seed/picsum/200/300",
@@ -13,12 +13,12 @@
         "Màu sắc: Trắng, Đen",
         "Kích thước: 120 x 30 x 10 cm",
         "Trọng lượng: 1.5 kg",
-        "Tính năng: Lau nhà tự động, có thể điều chỉnh độ cao"
+        "Tính năng: Lau nhà tự động, có thể điều chỉnh độ cao",
+        "nhẹ nhàng"
       ],
       "imageList": [
         "https://res.cloudinary.com/dwcxp0s5e/image/upload/v1746601632/kl55tkmptetkn1gv1pob.jpg",
-        "https://res.cloudinary.com/dwcxp0s5e/image/upload/v1746601639/e5hycrrsom6s6gojf4zq.jpg",
-        "https://res.cloudinary.com/dwcxp0s5e/image/upload/v1746670818/nudfwcxijptiq7hw71ie.jpg"
+        "https://res.cloudinary.com/dwcxp0s5e/image/upload/v1746601639/e5hycrrsom6s6gojf4zq.jpg"
       ]
     }
   ],
